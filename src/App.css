@@ -36,3 +36,43 @@
     transform: rotate(360deg);
   }
 }
+
+.card {
+  float: left;
+  margin: 10px;
+  width: 250px;
+  padding: 16px;
+}
+.card.active {
+  border: 2px solid;
+}
+.main-container {
+  padding: 50px;
+  display: block;
+}
+
+.actions {
+  display: block;
+  /* width: 100%; */
+  /* position: absolute; */
+  /* bottom: 20px; */
+  overflow:auto;
+}
+.chatLog {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  margin: 5px;
+  width: 25%;
+  border: .2vw solid #555;
+}
+
+.logHeader {
+  background-color: #9fb6cd;
+  border-bottom: .2vw solid #555;
+}
+.log {
+  overflow-y: scroll;
+  padding: 10px;
+  height: 50vh;
+}
