@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { EVOLUTION } from './Constants';
+import { EVOLUTION, STAR_NAMES, ACTION_NAMES, START_REQ, SCORING_COMBOS } from './Constants';
 
 const PlayerCard = (props) => {
   const isCurrentPlayer = props.player.id === props.gameProps.ctx.currentPlayer;
@@ -41,7 +41,7 @@ const PlayerCard = (props) => {
         Stars:
         <ul>
           {props.player.stars.map((star, i) =>  {
-            return <label className="checkbox"><input type="checkbox" checked={checkedState[i]} onChange={() => handleOnChange(i)}/> <b>{EVOLUTION[star.path][star.stage]}</b> [path={star.path}, stage={star.stage}, accelerate={star.accelerate}]</label>
+            return <label className="checkbox"><input type="checkbox" checked={checkedState[i]} onChange={() => handleOnChange(i)}/> <b>{STAR_NAMES[EVOLUTION[star.path][star.stage]]}</b> [path={star.path}, stage={star.stage}, accelerate={star.accelerate}]</label>
             })}
         </ul>
         <button onClick={freezeStars}>Freeze</button>
@@ -68,13 +68,13 @@ const PlayerCard = (props) => {
             for (let i2 = star.stage; i2 < EVOLUTION[star.path].length; i2++) {
               const nextStage = EVOLUTION[star.path][i2];
               if (nextStage !== EVOLUTION[star.path][star.stage]) {
-                nextStageText = `${steps} steps to ${nextStage}`;
+                nextStageText = `${steps} steps to ${STAR_NAMES[nextStage]}`;
                 break;
               }
               steps += 1;
             }
           }
-          return <li><b>{EVOLUTION[star.path][star.stage]}</b> [path={star.path}, stage={star.stage} ({nextStageText}), accelerate={star.accelerate}]
+          return <li><b>{STAR_NAMES[EVOLUTION[star.path][star.stage]]}</b> [path={star.path}, stage={star.stage} ({nextStageText}), accelerate={star.accelerate}]
           {showChallengeButtons ? <button onClick={() => props.gameProps.moves.challenge(props.player.id, i)}>Challenge</button> : ""}
           {showFeedHydrogenButtons ? <button onClick={() => props.gameProps.moves.feedMassToStar(i, true)}>Feed hydrogen</button> : ""}
           {showFeedNonHydrogenButtons ? <button onClick={() => props.gameProps.moves.feedMassToStar(i, false)}>Feed non-hydrogen</button> : ""}
@@ -137,6 +137,11 @@ export const StarsUnitedBoard = (props) => {
       </div>
       <div className="actions">
         {ActionsBar(props, currentStage)}
+      </div>
+      <div>
+        <h2><b>Start requirements</b>: {JSON.stringify(START_REQ)}</h2><br/>
+        <h2><b>Evolution paths</b>: {JSON.stringify(EVOLUTION)}</h2><br/>
+        <h2><b>Scoring combos</b>: {JSON.stringify(SCORING_COMBOS, null, 2)}</h2>
       </div>
       <div className="chatLog">
         <div className="logHeader is-size-1 has-text-centered">Logs</div>

@@ -1,7 +1,7 @@
 
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { GAME_NAME } from "../config";
-import { START_REQ, EVOLUTION, DRAW_CARDS } from "./Constants";
+import { START_REQ, EVOLUTION, DRAW_CARDS, SCORING_COMBOS } from "./Constants";
 
 
 /* ---- Setup ---- */
@@ -65,7 +65,8 @@ const acceptChallenge = (G, ctx) => {
   const challengerPlayerName = G.players[ctx.currentPlayer].name;
   const challengedPlayerName = G.players[ctx.playerID].name;
   const firstDieRoll = ctx.random.Die(6);
-  const challengingForHydrogen = firstDieRoll > 2;
+  const challengedStarObj = G.players[ctx.playerID].stars[G.challengedStar];
+  const challengingForHydrogen = (firstDieRoll > 2 && EVOLUTION[challengedStarObj.path][challengedStarObj.stage] === "msq") || (firstDieRoll <= 2 && EVOLUTION[challengedStarObj.path][challengedStarObj.stage] !== "msq");
   G.logs.push(`${challengerPlayerName} rolls ${firstDieRoll}, they are challenging for ${challengingForHydrogen ? "hydrogen" : "non-hydrogen"} mass`);
   const challengerDieRoll = ctx.random.Die(6);
   G.logs.push(`${challengerPlayerName} rolls ${challengerDieRoll} for the show down`);
@@ -125,6 +126,9 @@ const feedMassToStar = (G, ctx, starIndex, hydrogen) => {
 };
 
 const evolveStar = (G, ctx) => {
+  if (G.players[ctx.currentPlayer].stars.length === 0) {
+    return;
+  }
   G.logs.push(`${G.players[ctx.currentPlayer].name}'s stars have evolved`);
   for (const star of G.players[ctx.currentPlayer].stars) {
     if (star.accelerate === 0) {
@@ -145,7 +149,17 @@ const evolveStar = (G, ctx) => {
 
 const scoreStars = (stars) => {
   // TODO
-  return stars.length;
+  const counts = {};
+  for (const star of stars) {
+    counts[star] = counts[star] ? counts[star] + 1 : 1;
+  }
+  for (const combo of SCORING_COMBOS) {
+    // Check if this combo is present
+    if (JSON.stringify(combo.cards, Object.keys(combo.cards).sort()) === JSON.stringify(counts, Object.keys(counts).sort())) {
+      return (combo.name, combo.score);
+    }
+  }
+  return ("nothing", 0);
 }
 
 const freezeStars = (G, ctx, starIndices) => {
@@ -164,7 +178,10 @@ const freezeStars = (G, ctx, starIndices) => {
     currentPlayer.stars.splice(starIndices[i], 1);
   }
   currentPlayer.finishedStars.push(frozenStars);
-  currentPlayer.score += scoreStars(frozenStars);
+  let comboName, comboScore;
+  [comboName, comboScore] = scoreStars;
+  currentPlayer.score += comboScore;
+  G.logs.push(`${currentPlayer.name} got a ${comboName} combo and scored ${comboScore} points!`);
 };
 
 const drawCards = (G, ctx) => {

@@ -73,6 +73,7 @@
 }
 .log {
   overflow-y: scroll;
+  scroll-snap-type: y proximity;
   padding: 10px;
   height: 50vh;
 }
