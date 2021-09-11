@@ -1,8 +1,8 @@
-import { GAME_NAME, DEFAULT_PORT, APP_PRODUCTION } from "../config";
+import { GAME_NAME, DEFAULT_PORT, APP_PRODUCTION, API_URL } from "../config";
 import ky from "ky"; // HTTP client I'm using (saw other people use it, looks like it works fine, and it's pretty simple to use)
 
 const { origin, protocol, hostname } = window.location;
-const SERVER_URL = APP_PRODUCTION ? origin : `${protocol}//${hostname}:${DEFAULT_PORT}`;
+const SERVER_URL = APP_PRODUCTION ? API_URL : `${protocol}//${hostname}:${DEFAULT_PORT}`;
 
 // Make HTTP requests (HTTP method, URL endpoint: description) to boardgame.io Lobby REST API
 export class LobbyAPI {

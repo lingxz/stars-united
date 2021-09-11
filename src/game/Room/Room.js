@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Client } from "boardgame.io/react";
 import { SocketIO } from "boardgame.io/multiplayer";
 import classNames from "classnames";
-import { DEFAULT_PORT, APP_PRODUCTION } from "../../config";
+import { DEFAULT_PORT, APP_PRODUCTION, API_URL } from "../../config";
 import { StarsUnited } from "../Game";
 import { StarsUnitedBoard } from "../Board";
 import Lobby from "../Lobby/Lobby";
@@ -12,7 +12,7 @@ import { api } from "../LobbyAPI";
 import "./Room.scss";
 
 const { origin, protocol, hostname } = window.location;
-const SERVER_URL = APP_PRODUCTION ? origin : `${protocol}//${hostname}:${DEFAULT_PORT}`;
+const SERVER_URL = APP_PRODUCTION ? API_URL : `${protocol}//${hostname}:${DEFAULT_PORT}`;
 
 const Room = (props) => {
   const { history } = props;

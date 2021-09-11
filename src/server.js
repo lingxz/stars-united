@@ -1,10 +1,11 @@
 // src/server.js
 const { Server, Origins } = require('boardgame.io/server');
 const { StarsUnited } = require('./game/Game');
+const { WEB_URL } = require('./game/Constants');
 
 const server = Server({
   games: [StarsUnited],
-  origins: [Origins.LOCALHOST],
+  origins: [Origins.LOCALHOST, WEB_URL],
 });
 
 server.run(8000);
