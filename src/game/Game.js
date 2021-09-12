@@ -1,7 +1,7 @@
 
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { GAME_NAME } from "../config";
-import { START_REQ, EVOLUTION, DRAW_CARDS, SCORING_COMBOS } from "./Constants";
+import { START_REQ, EVOLUTION, DRAW_CARDS, SCORING_COMBOS, INITIAL_CHALLENGES } from "./Constants";
 
 
 /* ---- Setup ---- */
@@ -15,7 +15,8 @@ const setup = ({ numPlayers }) => {
       stars: [],
       finishedStars: [],
       id: `${i}`,
-      score: 0
+      score: 0,
+      challenges: INITIAL_CHALLENGES,
     };
   };
   return {
@@ -48,6 +49,13 @@ const makeStar = (G, ctx, path) => {
 };
 
 const challenge = (G, ctx, otherPlayerId, otherPlayerStarIndex) => {
+  // Out of challenges
+  if (G.players[ctx.currentPlayer] === 0) {
+    G.logs.push(`${G.players[ctx.currentPlayer].name} is out of challenges`);
+    return INVALID_MOVE;
+  }
+
+  // Cannot challenge yourself
   if (otherPlayerId === ctx.currentPlayer) {
     return INVALID_MOVE;
   }
@@ -62,6 +70,7 @@ const acceptChallenge = (G, ctx) => {
     // No challenge has started yet.
     return INVALID_MOVE;
   }
+
   const challengerPlayerName = G.players[ctx.currentPlayer].name;
   const challengedPlayerName = G.players[ctx.playerID].name;
   const firstDieRoll = ctx.random.Die(6);
@@ -84,6 +93,9 @@ const acceptChallenge = (G, ctx) => {
     }
   } else {
     G.logs.push(`${challengedPlayerName} rolls ${dieRoll}, challenge is unsuccessful`);
+    // Challenge is unsuccessful, so deduct challenge from challenges and add to challengee.
+    G.players[ctx.currentPlayer].challenges -= 1;
+    G.players[ctx.playerID].challenges += 1;
   }
 
   // Clear all the challenge related values.

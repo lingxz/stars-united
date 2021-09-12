@@ -43,3 +43,5 @@ export const SCORING_COMBOS = [
   Combo("Beginning and end", {"proto": 1, "white": 1}, 3),
   Combo("Binary star", {"msq": 2}, 2),
 ];
+
+export const INITIAL_CHALLENGES = 5;

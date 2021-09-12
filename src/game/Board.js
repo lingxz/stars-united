@@ -36,7 +36,8 @@ const PlayerCard = (props) => {
         <p>
           Score: {props.player.score} <br/>
           Hydrogen: {props.player.hydrogen}<br/>
-          Non-hydrogen: {props.player.nonHydrogen}<br/><br/>
+          Non-hydrogen: {props.player.nonHydrogen}<br/>
+          Challenges left: {props.player.challenges}<br/><br/>
         </p>
         Stars:
         <ul>
@@ -55,7 +56,8 @@ const PlayerCard = (props) => {
       <p>
         Score: {props.player.score} <br/>
         Hydrogen: {props.player.hydrogen}<br/>
-        Non-hydrogen: {props.player.nonHydrogen}<br/><br/>
+        Non-hydrogen: {props.player.nonHydrogen}<br/>
+        Challenges left: {props.player.challenges}<br/><br/>
       </p>
       Stars:
       <ul>
