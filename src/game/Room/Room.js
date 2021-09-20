@@ -2,16 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Client } from "boardgame.io/react";
 import { SocketIO } from "boardgame.io/multiplayer";
-import classNames from "classnames";
 import { DEFAULT_PORT, APP_PRODUCTION, API_URL } from "../../config";
 import { StarsUnited } from "../Game";
 import { StarsUnitedBoard } from "../Board";
 import Lobby from "../Lobby/Lobby";
 import { api } from "../LobbyAPI";
 
-import "./Room.scss";
-
-const { origin, protocol, hostname } = window.location;
+const { _, protocol, hostname } = window.location;
 const SERVER_URL = APP_PRODUCTION ? API_URL : `${protocol}//${hostname}:${DEFAULT_PORT}`;
 
 const Room = (props) => {
@@ -79,6 +76,7 @@ const Room = (props) => {
         game: StarsUnited, 
         board: StarsUnitedBoard,
         numPlayers: players.length,
+        debug: false,
         multiplayer: SocketIO({server: SERVER_URL})
       });
     return (
@@ -91,36 +89,33 @@ const Room = (props) => {
   } else {
     return (
       <Lobby>
-        <span className="title room-title">Room</span>
-        <div className="players-list">
+        <h2>[Room]</h2>
+        <ul class="large-font">
           {players.map((player) => {
             if (player.name) {
-              return player.name + `${player.name === localStorage.getItem("name") ? " (You)" : ""}\n`;
+              return <li>{player.name + `${player.name === localStorage.getItem("name") ? " (you)" : ""}\n`}</li>;
             } else {
-              return "...\n";
+              return <li>...<br/></li>;
             }
           })}
-        </div>
-        <div className="room-info-area">
-          <div className="roomID-area">
-            room id:
-            <textarea id="roomID" value={id} readOnly />
-            <button
-              className={classNames("copy-btn", { "copied-btn": copied })}
-              onClick={copyToClipboard}
-              disabled={copied}
-            >
-              {copied ? "copied" : "copy"}
-            </button>
-          </div>
-          <div className="room-info">
-            Game will begin once all
-            {players.length === 0 ? "" : ` ${players.length}`} players have joined.
-          </div>
-          <button className="leave-btn" onClick={leaveRoom}>
-            leave
+        </ul>
+        <div class="row">
+          <label class="large-font">room id:&nbsp;</label><input className="input-field" id="roomID" value={id} readOnly />
+          <button
+            onClick={copyToClipboard}
+            disabled={copied}
+          >
+            {copied ? "copied" : "copy"}
           </button>
         </div>
+        <p class="large-font">
+          Game will begin once all
+          {players.length === 0 ? "" : ` ${players.length}`} players have joined.
+        </p>
+        <button className="btn-large" onClick={leaveRoom}>
+          LEAVE
+        </button>
+
       </Lobby>
     );
   }

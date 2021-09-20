@@ -1,70 +1,55 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.card {
-  float: left;
-  margin: 10px;
-  width: 250px;
-  padding: 16px;
-}
-.card.active {
-  border: 2px solid;
-}
 .main-container {
-  padding: 50px;
-  display: block;
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+  overflow: auto;
+}
+
+.cards-row {
+  overflow-x: auto;
+  margin: 0;
+  max-height: 40vh;
+  margin: 1rem;
+  padding: 1rem;
+  border: 2px solid var(--primary);
+}
+
+.card:hover {
+  box-shadow: none;
+  transform: none;
+}
+
+.player-card {
+  width: 250px;
 }
 
 .actions {
   display: block;
-  /* width: 100%; */
-  /* position: absolute; */
-  /* bottom: 20px; */
   overflow:auto;
 }
+
+.command {
+  z-index: 300;
+  margin-bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+#command-input {
+  flex: 1 1 auto;
+}
+
+button {
+  margin: 0;
+}
+
+
 .chatLog {
-  position: absolute;
-  bottom: 30px;
-  right: 30px;
-  margin: 5px;
-  width: 25%;
-  border: .2vw solid #555;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  overflow: auto;
 }
 
 .logHeader {
@@ -72,8 +57,34 @@
   border-bottom: .2vw solid #555;
 }
 .log {
-  overflow-y: scroll;
+  overflow-y: auto;
   scroll-snap-type: y proximity;
   padding: 10px;
-  height: 50vh;
+  flex: 1 1 auto;
+}
+
+
+#help-button {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+}
+
+
+.input-field {
+  padding: 0.25vh;
+  font-size: 2rem;
+}
+
+.large-font {
+  font-size: 2rem;
+}
+.error-msg {
+  font-size: 2.5vh;
+  height: 3vh;
+  margin: 1vh 0 0;
+}
+
+label {
+  font-size: 1.2rem;
 }

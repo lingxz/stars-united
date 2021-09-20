@@ -41,7 +41,17 @@ export const SCORING_COMBOS = [
   Combo("Explosions", {"supernova": 2}, 6),
   Combo("Triple star", {"msq": 3}, 5),
   Combo("Beginning and end", {"proto": 1, "white": 1}, 3),
-  Combo("Binary star", {"msq": 2}, 2),
+  Combo("Binary star", {"msq": 2}, 3),
 ];
+
+export const INDIV_STAR_SCORES = {
+  "proto": 0.5,
+  "white": 0.5,
+  "msq": 1,
+  "redsuper": 1,
+  "supernova": 1,
+  "red": 1,
+  "bh": -2,
+}
 
 export const INITIAL_CHALLENGES = 5;

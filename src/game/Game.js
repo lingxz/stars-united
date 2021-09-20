@@ -1,7 +1,7 @@
 
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { GAME_NAME } from "../config";
-import { START_REQ, EVOLUTION, DRAW_CARDS, SCORING_COMBOS, INITIAL_CHALLENGES } from "./Constants";
+import { START_REQ, EVOLUTION, DRAW_CARDS, SCORING_COMBOS, INITIAL_CHALLENGES, INDIV_STAR_SCORES } from "./Constants";
 
 
 /* ---- Setup ---- */
@@ -160,7 +160,6 @@ const evolveStar = (G, ctx) => {
 };
 
 const scoreStars = (stars) => {
-  // TODO
   const counts = {};
   for (const star of stars) {
     counts[star] = counts[star] ? counts[star] + 1 : 1;
@@ -168,18 +167,27 @@ const scoreStars = (stars) => {
   for (const combo of SCORING_COMBOS) {
     // Check if this combo is present
     if (JSON.stringify(combo.cards, Object.keys(combo.cards).sort()) === JSON.stringify(counts, Object.keys(counts).sort())) {
-      return (combo.name, combo.score);
+      return [combo.name, combo.score];
     }
   }
-  return ("nothing", 0);
+
+  // No combo, try to score individually
+  let score = 0;
+  for (const s of stars) {
+    score += INDIV_STAR_SCORES[s];
+  }
+  return ["no combo", score];
 }
 
 const freezeStars = (G, ctx, starIndices) => {
   const currentPlayer = G.players[ctx.currentPlayer];
   const frozenStars = [];
+  const frozenStarNames = [];
   console.log("freeze stars", starIndices);
   for (const i of starIndices) {
-    frozenStars.push(currentPlayer.stars[i]);
+    const currentStar = currentPlayer.stars[i];
+    frozenStars.push(currentStar);
+    frozenStarNames.push(EVOLUTION[currentStar.path][currentStar.stage]);
   }
   // Remove frozen stars from active stars to stop evolving it
   // Star indices must work in ascending order so that splice doesn't mess with other index.
@@ -190,8 +198,7 @@ const freezeStars = (G, ctx, starIndices) => {
     currentPlayer.stars.splice(starIndices[i], 1);
   }
   currentPlayer.finishedStars.push(frozenStars);
-  let comboName, comboScore;
-  [comboName, comboScore] = scoreStars;
+  const [comboName, comboScore] = scoreStars(frozenStarNames);
   currentPlayer.score += comboScore;
   G.logs.push(`${currentPlayer.name} got a ${comboName} combo and scored ${comboScore} points!`);
 };
@@ -214,17 +221,14 @@ export const StarsUnited = {
     },
     stages: {
       play: { 
-        moves: { makeStar, feedMassToStar, drawCards, changeNames }
+        moves: { makeStar, feedMassToStar, drawCards, changeNames, freezeStars, challenge }
       },
       challenge: {
-        moves: { challenge, abortChallenge }
+        moves: {}
       },
       challenged: {
         moves: { acceptChallenge }
       },
-      freeze: {
-        moves: { freezeStars }
-      }
     }
   },
   minPlayers: 2,

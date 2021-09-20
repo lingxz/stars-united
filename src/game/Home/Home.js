@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Lobby from "../Lobby/Lobby";
 import { api } from "../LobbyAPI";
-import "./Home.scss";
 
 const Home = (props) => {
   const { history } = props;
@@ -91,10 +90,8 @@ const Home = (props) => {
 
   return (
     <Lobby>
-      <span className="title join-title">join game</span>
-      <div className="input-info-area">
-        <p style={{ margin: "0" }}>room id</p>
-      </div>
+      <h2>join game</h2>
+      <label>room id</label>
       <input
         id="roomIdentification"
         type="text"
@@ -103,13 +100,10 @@ const Home = (props) => {
         autoComplete="off"
         onKeyDown={(e) => handleKeyDown(e)}
         onChange={(e) => setRoom(e.target.value)}
-        className="input-field"
+        className="input-field input-block"
       />
-      <div className="input-info-area">
-        <p style={{ margin: "0" }}>your name</p>
-        <p style={{ margin: "0 0 0 auto" }}>{jNameCount}</p>
-      </div>
       <div className="user-input">
+        <label>your name</label>
         <input
           id="joinName"
           type="text"
@@ -123,31 +117,27 @@ const Home = (props) => {
         />
       </div>
       <button
-        className="lobby-btn"
+        className="btn-large"
         disabled={room.length !== roomIDLength || jName.length === 0}
         onClick={() => joinRoom(room, jName)}
       >
-        join
+        JOIN
       </button>
-      <div className="error-msg">{errMsg}</div>
-      <span className="title create-title">create room</span>
-      <div className="input-info-area">
-        <p style={{ margin: "0" }}># players: {num}</p>
-      </div>
-      <input
-        type="range"
-        min="2"
-        max="8"
-        value={num}
-        autoComplete="off"
-        onChange={(e) => setNum(e.target.value)}
-        className="input-slider"
-      />
-      <div className="input-info-area">
-        <p style={{ margin: "0" }}>your name</p>
-        <p style={{ margin: "0 0 0 auto" }}>{cNameCount}</p>
+      <p className="error-msg text-danger">{errMsg}</p>
+      <h2>create room</h2>
+      <div class="form-group">
+        <label># players: {num}</label>
+        <input
+          type="range"
+          min="2"
+          max="5"
+          value={num}
+          autoComplete="off"
+          onChange={(e) => setNum(e.target.value)}
+        />
       </div>
       <div className="user-input">
+        <label>your name</label>
         <input
           type="text"
           maxLength={`${maxNameLength}`}
@@ -159,8 +149,8 @@ const Home = (props) => {
           className="input-field"
         />
       </div>
-      <button className="lobby-btn" disabled={cName.length === 0} onClick={createRoom}>
-        create
+      <button className="btn-large" disabled={cName.length === 0} onClick={createRoom}>
+        CREATE
       </button>
     </Lobby>
   );
