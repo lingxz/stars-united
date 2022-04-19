@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { parseCommand } from './CommandParser';
-import { EVOLUTION, STAR_NAMES, ACTION_NAMES, START_REQ, SCORING_COMBOS } from './Constants';
+import { EVOLUTION, STAR_NAMES, START_REQ, SCORING_COMBOS } from './Constants';
 
 const PlayerCard = (props) => {
   const isCurrentPlayer = props.player.id === props.gameProps.ctx.currentPlayer;
   const clientPlayer = props.gameProps.playerID;
   const isClientPlayer = clientPlayer === props.player.id;
   return (
-    <div className="card player-card">
+    <div className={isCurrentPlayer ? "card player-card card-outline" : "card player-card"}>
       <div className="card-header">{props.player.name} {isClientPlayer ? "(you)" : ""}</div>
       <div className="card-body">
         <p>
@@ -71,7 +71,7 @@ const ActionsBar = (stage) => {
 const HelpButton = () => {
   // TODO write a better help page
   return <div>
-<label className="paper-btn margin" id="help-button" for="modal-1">?</label>
+<label className="paper-btn margin" id="help-button" htmlFor="modal-1">?</label>
 <input className="modal-state" id="modal-1" type="checkbox"/>
 <div className="modal">
   <label className="modal-bg" for="modal-1"></label>
@@ -79,12 +79,9 @@ const HelpButton = () => {
     <label className="btn-close" for="modal-1">X</label>
     <h4 className="modal-title">Info</h4>
     <p className="modal-text">
-      <div>
-        <b>Start requirements</b>: {JSON.stringify(START_REQ)}<br/>
-        <b>Evolution paths</b>: {JSON.stringify(EVOLUTION)}<br/>
-        <b>Scoring combos</b>: {JSON.stringify(SCORING_COMBOS, null, 2)}
-      </div>
-
+      <b>Start requirements</b>: {JSON.stringify(START_REQ)}<br/>
+      <b>Evolution paths</b>: {JSON.stringify(EVOLUTION)}<br/>
+      <b>Scoring combos</b>: {JSON.stringify(SCORING_COMBOS, null, 2)}
     </p>
   </div>
 </div>
@@ -102,8 +99,8 @@ export const StarsUnitedBoard = (props) => {
     }
   }, [props.playerID, props.moves, props.matchData]);
 
-  const [showCommandError, setShowCommandError] = React.useState(false);
-  const [errorMsg, setErrorMsg] = React.useState("");
+  const [showCommandError, setShowCommandError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const submitCommand = (e) => {
     e.preventDefault();
@@ -142,7 +139,7 @@ export const StarsUnitedBoard = (props) => {
           </div> : ""
         }
         <form className="form-group command" onSubmit={submitCommand}>
-          <input id="command-input" type="text"/><button>Submit</button>
+          <input id="command-input" type="text" autocomplete="off"/><button>Submit</button>
         </form>
       </div>
       <HelpButton/>

@@ -4,7 +4,7 @@ import React from "react";
 const Lobby = (props) => {
   return (
     <div className="container">
-      <h1><span class="badge secondary">Hydrogen heroes</span></h1>
+      <h1><span className="badge secondary">Hydrogen heroes</span></h1>
       {props.children}
       <p>Developed by lingxz</p>
     </div>

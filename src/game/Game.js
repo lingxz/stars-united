@@ -73,10 +73,7 @@ const acceptChallenge = (G, ctx) => {
 
   const challengerPlayerName = G.players[ctx.currentPlayer].name;
   const challengedPlayerName = G.players[ctx.playerID].name;
-  const firstDieRoll = ctx.random.Die(6);
   const challengedStarObj = G.players[ctx.playerID].stars[G.challengedStar];
-  const challengingForHydrogen = (firstDieRoll > 2 && EVOLUTION[challengedStarObj.path][challengedStarObj.stage] === "msq") || (firstDieRoll <= 2 && EVOLUTION[challengedStarObj.path][challengedStarObj.stage] !== "msq");
-  G.logs.push(`${challengerPlayerName} rolls ${firstDieRoll}, they are challenging for ${challengingForHydrogen ? "hydrogen" : "non-hydrogen"} mass`);
   const challengerDieRoll = ctx.random.Die(6);
   G.logs.push(`${challengerPlayerName} rolls ${challengerDieRoll} for the show down`);
 
@@ -84,13 +81,8 @@ const acceptChallenge = (G, ctx) => {
   if (dieRoll <= challengerDieRoll) {
     G.logs.push(`${challengedPlayerName} rolls ${dieRoll}, challenge is successful`);
     // Challenge success
-    if (challengingForHydrogen) {
-      G.players[G.challenger].hydrogen += 1;
-      G.players[ctx.playerID].stars[G.challengedStar].accelerate += 1;
-    } else {
-      G.players[G.challenger].nonHydrogen += 1;
-      G.players[ctx.playerID].stars[G.challengedStar].accelerate -= 1;
-    }
+    G.players[G.challenger].hydrogen += 1;
+    G.players[ctx.playerID].stars[G.challengedStar].accelerate += 1;
   } else {
     G.logs.push(`${challengedPlayerName} rolls ${dieRoll}, challenge is unsuccessful`);
     // Challenge is unsuccessful, so deduct challenge from challenges and add to challengee.
@@ -100,7 +92,6 @@ const acceptChallenge = (G, ctx) => {
 
   // Clear all the challenge related values.
   G.challenger = null;
-  G.challengingForHydrogen = null;
   G.challengerDieRoll = null;
   G.challengedStar = null;
   ctx.events.setActivePlayers({value: {[ctx.currentPlayer]: "play"}});
@@ -113,7 +104,6 @@ const abortChallenge = (G, ctx) => {
   }
   G.logs.push(`${G.players[ctx.currentPlayer].name} aborted the challenge`);
   G.challenger = null;
-  G.challengingForHydrogen = null;
   G.challengerDieRoll = null;
   G.challengedStar = null;
   ctx.events.setActivePlayers({currentPlayer: "play"});
